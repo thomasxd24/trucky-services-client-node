@@ -4,20 +4,19 @@ const fetch = require('node-fetch');
  * Trucky API client class
  * @class
  */
-class TruckyAPIClient
-{
+class TruckyAPIClient {
 
     /**
      * Creates an instance of TruckyAPIClient.
      *
      * @memberOf TruckyAPIClient
      */
-    constructor()
-    {
+    constructor(userAgent) {
         /** @access private */
         this.config = {
             serviceUrl: 'https://api.truckyapp.com'
         }
+        this.userAgent = userAgent
     }
 
     /**
@@ -31,27 +30,16 @@ class TruckyAPIClient
      *
      * @memberOf TruckyAPIClient
      */
-    async executeRequest(url, method = "GET", payload)
-    {
-        try
-        {
-            var promise = new Promise((resolve, reject) => {
+    async executeRequest(url, method = "GET", payload) {
 
-                fetch(this.config.serviceUrl + url, {method: method}).then((response) => {
-                    return response.json()
-                }).then((json) => {
-                    resolve(json);
-                })
-            });
+        await fetch(this.config.serviceUrl + url,
+             { 
+                 method: method,
+                headers: {"User-Agent": this.userAgent}
+             })
+             .then(response => response.json())
+             .catch(err => console.error(err.message))
 
-            return promise;
-
-        } catch (error) {
-
-            console.debug('TruckyServices API request: ' + error.message);
-
-            return null;
-        }
     }
 
     /**
@@ -63,8 +51,7 @@ class TruckyAPIClient
      *
      * @memberOf TruckyAPIClient
      */
-    async resolveVanityUrl(username)
-    {
+    async resolveVanityUrl(username) {
         var response = await this.executeRequest('/v2/steam/resolveVanityUrl?username=' + username);
         return response;
     }
@@ -78,8 +65,7 @@ class TruckyAPIClient
      *
      * @memberOf TruckyServices
      */
-    async getPlayerSummaries(steamid)
-    {
+    async getPlayerSummaries(steamid) {
         var response = await this.executeRequest('/v2/steam/getPlayerSummaries?steamid=' + steamid);
         return response;
     }
@@ -91,8 +77,7 @@ class TruckyAPIClient
      * @async
      * @memberof TruckyAPIClient
      */
-    async pois()
-    {
+    async pois() {
         var response = await this.executeRequest('/v2/map/pois');
         return response;
     }
@@ -105,8 +90,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async isOnline(playerID)
-    {
+    async isOnline(playerID) {
         var response = await this.executeRequest('/v2/map/online?playerID=' + playerID);
         return response;
     }
@@ -119,8 +103,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async isOnlineImproved(playerID)
-    {
+    async isOnlineImproved(playerID) {
         var response = await this.executeRequest('/v3/map/online?playerID=' + playerID);
         return response;
     }
@@ -133,8 +116,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async getFriends(steamID)
-    {
+    async getFriends(steamID) {
         var response = await this.executeRequest('/v2/steam/getFriendsData?steamid=' + steamID);
         return response;
     }
@@ -146,8 +128,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async news()
-    {
+    async news() {
         var response = await this.executeRequest('/v2/rss/truckersMP');
         return response;
     }
@@ -159,8 +140,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async ets2News()
-    {
+    async ets2News() {
         var response = await this.executeRequest('/v2/rss/ets2');
         return response;
     }
@@ -172,8 +152,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async atsNews()
-    {
+    async atsNews() {
         var response = await this.executeRequest('/v2/rss/ats');
         return response;
     }
@@ -185,8 +164,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async update_info()
-    {
+    async update_info() {
         var response = await this.executeRequest('/v2/truckersmp/update_info');
         return response;
     }
@@ -198,14 +176,12 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async events()
-    {
+    async events() {
         var response = await this.executeRequest('/v2/events/upcoming');
         return response;
     }
 
-    async eventDetail(id)
-    {
+    async eventDetail(id) {
         var response = await this.executeRequest('/v2/events/detail?eventID=' + id);
         return response;
     }
@@ -218,8 +194,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async servers()
-    {
+    async servers() {
         var response = await this.executeRequest('/v2/truckersmp/servers');
         return response;
 
@@ -232,8 +207,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async game_version()
-    {
+    async game_version() {
         var response = await this.executeRequest('/v2/truckersmp/version');
         return response;
     }
@@ -245,8 +219,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async game_time()
-    {
+    async game_time() {
         var response = await this.executeRequest('/v2/truckersmp/time');
         return response;
     }
@@ -258,8 +231,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async rules()
-    {
+    async rules() {
         var response = await this.executeRequest('/v2/truckersmp/rules');
         return response;
     }
@@ -272,8 +244,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async player(id)
-    {
+    async player(id) {
         var response = await this.executeRequest('/v2/truckersmp/player?playerID=' + id);
         return response;
     }
@@ -286,8 +257,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async bans(id)
-    {
+    async bans(id) {
         var response = await this.executeRequest('/v2/truckersmp/bans?playerID=' + id);
         return response;
     }
@@ -302,8 +272,7 @@ class TruckyAPIClient
      *
      * @memberOf TruckyAPIClient
      */
-    async searchPlayer(searchTerm, searchType)
-    {
+    async searchPlayer(searchTerm, searchType) {
         var playerInfo = {
             found: false,
             steamProfileInfo: null,
@@ -365,14 +334,12 @@ class TruckyAPIClient
     * @returns {Promise<TruckyAPIResponse>}
      * @memberof TruckyAPIClient
      */
-    async traffic(server, game)
-    {
+    async traffic(server, game) {
         var response = await this.executeRequest('/v2/traffic?server=' + server + '&game=' + game);
         return response;
     }
 
-    async topTraffic(server, game)
-    {
+    async topTraffic(server, game) {
         var response = await this.executeRequest('/v2/traffic/top?server=' + server + '&game=' + game);
         return response;
     }
@@ -384,8 +351,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async traffic_servers()
-    {
+    async traffic_servers() {
         var response = await this.executeRequest('/v2/traffic/servers?addAts=true');
         return response;
     }
@@ -397,12 +363,11 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async wot_gallery_random()
-    {
+    async wot_gallery_random() {
         var response = await this.executeRequest('/v2/wot/gallery/random');
         return response;
     }
-    
+
     /**
      * Get World Of Trucks Editor's pick
      *
@@ -410,8 +375,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async wot_gallery_editorspick()
-    {
+    async wot_gallery_editorspick() {
         var response = await this.executeRequest('/v2/wot/gallery/editorspick');
         return response;
     }
@@ -423,8 +387,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async wot_gallery_bestrated()
-    {
+    async wot_gallery_bestrated() {
         var response = await this.executeRequest('/v2/wot/gallery/bestrated');
         return response;
     }
@@ -436,8 +399,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async wot_gallery_mostviewed()
-    {
+    async wot_gallery_mostviewed() {
         var response = await this.executeRequest('/v2/wot/gallery/mostviewed');
         return response;
     }
@@ -449,8 +411,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async streams_twitch_ets2()
-    {
+    async streams_twitch_ets2() {
         var response = await this.executeRequest('/v2/streams/twitch/ets2');
         return response;
     }
@@ -462,8 +423,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async streams_twitch_ats()
-    {
+    async streams_twitch_ats() {
         var response = await this.executeRequest('/v2/streams/twitch/ats');
         return response;
     }
@@ -475,8 +435,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async truckersfm_listeners()
-    {
+    async truckersfm_listeners() {
         var response = await this.executeRequest('/v2/truckersfm/listeners');
         return response;
     }
@@ -488,8 +447,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async truckersfm_shows()
-    {
+    async truckersfm_shows() {
         var response = await this.executeRequest('/v2/truckersfm/shows');
         return response;
     }
@@ -501,8 +459,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async truckersfm_lastPlayed()
-    {
+    async truckersfm_lastPlayed() {
         var response = await this.executeRequest('/v2/truckersfm/lastPlayed');
         return response;
     }
@@ -515,8 +472,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async onlineList(ids)
-    {
+    async onlineList(ids) {
         var response = await this.executeRequest('/v2/map/onlineList?ids=' + ids.join(','));
         return response;
     }
@@ -528,8 +484,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async searchPlayerByTruckersMPUsername(query)
-    {
+    async searchPlayerByTruckersMPUsername(query) {
         var response = await this.executeRequest('/v2/truckersmp/searchPlayer?query=' + query);
         return response;
     }
@@ -541,21 +496,19 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async getPlayerInfoComplete(query)
-    {
+    async getPlayerInfoComplete(query) {
         var response = await this.executeRequest('/v2/trucky/player?query=' + query);
         return response;
     }
 
-     /**
-     * Get list of ETS2 cities, with coordinates and country
-     *
-     * @returns {Promise<TruckyAPIResponse>}
-     * @memberof TruckyAPIClient
-     * @async
-     */
-    async ets2_cities()
-    {
+    /**
+    * Get list of ETS2 cities, with coordinates and country
+    *
+    * @returns {Promise<TruckyAPIResponse>}
+    * @memberof TruckyAPIClient
+    * @async
+    */
+    async ets2_cities() {
         var response = await this.executeRequest('/v2/map/cities/ets2');
         return response;
     }
@@ -567,8 +520,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async ats_cities()
-    {
+    async ats_cities() {
         var response = await this.executeRequest('/v2/map/cities/ats');
         return response;
     }
@@ -580,8 +532,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async cities_all()
-    {
+    async cities_all() {
         var response = await this.executeRequest('/v2/map/cities/all');
         return response;
     }
@@ -593,8 +544,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async map_servers()
-    {
+    async map_servers() {
         var response = await this.executeRequest('/v2/map/servers');
         return response;
     }
@@ -606,8 +556,7 @@ class TruckyAPIClient
      * @memberof TruckyAPIClient
      * @async
      */
-    async searchPlayerOnMap(query)
-    {
+    async searchPlayerOnMap(query) {
         var response = await this.executeRequest('/v2/map/searchPlayer?query=' + query);
         return response;
     }

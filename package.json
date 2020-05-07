@@ -10,7 +10,7 @@
   "author": "Francesco 'ShArDiCk' Bramato",
   "license": "ISC",
   "dependencies": {
-    "node-fetch": "^2.1.2"
+    "node-fetch": "2.6.0"
   },
   "repository": {
     "url": "https://github.com/shardick/trucky-services-client-node",
