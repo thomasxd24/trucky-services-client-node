@@ -95,6 +95,31 @@ class TruckyAPIClient {
         return response;
     }
 
+     /**
+     * Check TruckersMP player online status
+     *
+     * @returns {Promise<TruckyAPIResponse>}
+     * @memberof TruckyAPIClient
+     * @async
+     */
+    async radioList() {
+        var response = await this.executeRequest('/v2/radios/');
+        return response;
+    }
+
+     /**
+     * Check TruckersMP player online status
+     *
+     * @param {string} stationID Station ID
+     * @returns {Promise<TruckyAPIResponse>}
+     * @memberof TruckyAPIClient
+     * @async
+     */
+    async radioInfo(stationID) {
+        var response = await this.executeRequest(`/v2/radios/${stationID}/info`);
+        return response;
+    }
+
     /**
      * Check TruckersMP player online status - With improved informations, mapped map server and calculated location
      *
