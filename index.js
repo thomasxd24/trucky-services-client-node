@@ -32,7 +32,7 @@ class TruckyAPIClient {
      */
     async executeRequest(url, method = "GET", payload) {
 
-        await fetch(this.config.serviceUrl + url,
+        return await fetch(this.config.serviceUrl + url,
              { 
                  method: method,
                 headers: {"User-Agent": this.userAgent}
